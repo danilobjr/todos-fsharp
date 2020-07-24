@@ -1,16 +1,43 @@
 module App
 
 open Browser.Dom
+open Fable.React
+open Fable.React.Props
 
-// Mutable variable to count the number of times we clicked the button
-let mutable count = 0
+let App =
+    fun () ->
+        div [] [
+            header [] [
+                h1 [] [ str "todos" ]
+                input [ Class "new"
+                        Placeholder "What needs to be done?"
+                        AutoFocus true ]
+            ]
 
-// Get a reference to our button and cast the Element to an HTMLButtonElement
-let myButton =
-    document.querySelector (".my-button") :?> Browser.Types.HTMLButtonElement
+            section [ Class "main" ] [
+                input [ Id "toggle-all"; Type "checkbox" ]
+                label [ HtmlFor "toggle-all" ] [ str "Mark all as complete" ]
 
-// Register our listener
-myButton.onclick <-
-    fun _ ->
-        count <- count + 1
-        myButton.innerText <- sprintf "You clicked: %i time(s)" count
+                ul [ Class "todos" ] []
+
+                footer [] [
+                    span [ Class "count" ] []
+
+                    ul [ Class "filters" ] [
+                        li [] [
+                            a [ Class "selected"; Href "#/" ] [ str "All" ]
+                        ]
+                        li [] [
+                            a [ Href "#/active" ] [ str "Active" ]
+                        ]
+                        li [] [
+                            a [ Href "#/completed" ] [ str "Completed" ]
+                        ]
+                    ]
+
+                    button [ Class "clear" ] [ str "Clear completed" ]
+                ]
+            ]
+        ]
+
+ReactDom.render (App(), document.getElementById "app")
