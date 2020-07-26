@@ -58,6 +58,30 @@ let reducer state action =
     | Filter All ->
         { state with Filter = All }
 
+// Components
+
+let getItemsLeftPhrase = function
+    | Some count when count = 1 -> "1 item left"
+    | Some count -> sprintf "%i items left" count
+    | None -> "No items left"
+
+type ActiveTodosCountProps = { Count: int }
+
+let ActiveTodosCount =
+    FunctionComponent.Of<ActiveTodosCountProps>(fun props ->
+        let toOption count =
+            match count with
+            | 0 -> None
+            | _ -> Some count
+
+        let itemsLeftPhrase =
+            props.Count
+            |> toOption
+            |> getItemsLeftPhrase
+        
+        span [ Class "count" ] [ str itemsLeftPhrase ]
+    )
+
 let TodoItem = 
     FunctionComponent.Of<Todo>(fun props ->
 
@@ -70,8 +94,6 @@ let TodoItem =
         // input [ Class "edit"; Value "todo" ]
     ])
 
-// Components
-
 let App =
     FunctionComponent.Of(fun () ->
 
@@ -82,6 +104,11 @@ let App =
         state.Todos
         |> filterTodos state.Filter
         |> List.map TodoItem
+
+    let activeTodosCount =
+        state.Todos
+        |> filterTodos Active
+        |> List.length
 
     fragment [] [
         header [] [
@@ -104,7 +131,7 @@ let App =
             ul [ Class "todos" ] filteredItems
 
             footer [] [
-                span [ Class "count" ] []
+                ActiveTodosCount { Count = activeTodosCount }
 
                 ul [ Class "filters" ] [
                     li [] [
