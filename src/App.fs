@@ -36,6 +36,7 @@ type State = {
 }
 
 type Action =
+    | ClearCompleted
     | Filter of Filter
 
 let initialState = {
@@ -45,6 +46,11 @@ let initialState = {
 
 let reducer state action =
     match action with
+    | ClearCompleted ->
+        let activeTodos =
+            state.Todos
+            |> filterTodos Active
+        { state with Todos = activeTodos }
     | Filter Active ->
         { state with Filter = Active }
     | Filter Completed ->
@@ -119,7 +125,7 @@ let App =
                     ]
                 ]
 
-                button [ Class "clear" ] [ str "Clear completed" ]
+                button [ Class "clear"; OnClick (fun _ -> state.update ClearCompleted) ] [ str "Clear completed" ]
             ]
         ]
     ])
