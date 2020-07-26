@@ -69,18 +69,38 @@ type ActiveTodosCountProps = { Count: int }
 
 let ActiveTodosCount =
     FunctionComponent.Of<ActiveTodosCountProps>(fun props ->
-        let toOption count =
-            match count with
-            | 0 -> None
-            | _ -> Some count
 
-        let itemsLeftPhrase =
-            props.Count
-            |> toOption
-            |> getItemsLeftPhrase
-        
-        span [ Class "count" ] [ str itemsLeftPhrase ]
-    )
+    let toOption count =
+        match count with
+        | 0 -> None
+        | _ -> Some count
+
+    let itemsLeftPhrase =
+        props.Count
+        |> toOption
+        |> getItemsLeftPhrase
+    
+    span [ Class "count" ] [ str itemsLeftPhrase ])
+
+type FilterButtonProps = {
+    CurrentFilter: Filter
+    FilterBy: Filter
+    OnClick: Filter -> unit
+}
+
+let FilterButton =
+    FunctionComponent.Of<FilterButtonProps>(fun props ->
+
+    let filterText =
+        match props.FilterBy with
+        | All -> "All"
+        | Active -> "Active"
+        | Completed -> "Completed"
+
+    a [ classList [ "selected", props.FilterBy = props.CurrentFilter ]
+        Href "#/"
+        OnClick (fun _ -> props.OnClick props.FilterBy) ]
+      [ str filterText ])
 
 let TodoItem = 
     FunctionComponent.Of<Todo>(fun props ->
@@ -135,22 +155,25 @@ let App =
 
                 ul [ Class "filters" ] [
                     li [] [
-                        a [ classList [ "selected", state.Filter = All ]
-                            Href "#/"
-                            OnClick (fun _ -> dispatch (Filter All)) ]
-                          [ str "All" ]
+                        FilterButton {
+                            CurrentFilter = state.Filter
+                            FilterBy = All
+                            OnClick = (fun filter -> dispatch (Filter filter))
+                        }
                     ]
                     li [] [
-                        a [ classList [ "selected", state.Filter = Active ]
-                            Href "#/active"
-                            OnClick (fun _ -> dispatch (Filter Active)) ]
-                          [ str "Active" ]
+                        FilterButton {
+                            CurrentFilter = state.Filter
+                            FilterBy = Active
+                            OnClick = (fun filter -> dispatch (Filter filter))
+                        }
                     ]
                     li [] [
-                        a [ classList [ "selected", state.Filter = Completed ]
-                            Href "#/completed"
-                            OnClick (fun _ -> dispatch (Filter Completed)) ]
-                          [ str "Completed" ]
+                        FilterButton {
+                            CurrentFilter = state.Filter
+                            FilterBy = Completed
+                            OnClick = (fun filter -> dispatch (Filter filter))
+                        }
                     ]
                 ]
 
