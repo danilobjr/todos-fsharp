@@ -5,6 +5,11 @@
   <ItemGroup>
     <Compile Include="Todo.fs" />
     <Compile Include="ReactUtils.fs" />
+    <Compile Include="Data.fs" />
+    <Compile Include="State.fs" />
+    <Compile Include="TodoItem.fs" />
+    <Compile Include="FilterButton.fs" />
+    <Compile Include="ActiveTodosCount.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
   <ItemGroup>
