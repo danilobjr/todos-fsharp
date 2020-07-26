@@ -25,6 +25,9 @@ let App =
         |> filterTodos Active
         |> List.length
 
+    let completedTodosCount =
+        (state.Todos |> List.length) - activeTodosCount
+
     fragment [] [
         header [] [
             h1 [] [ str "todos" ]
@@ -75,7 +78,10 @@ let App =
                     ]
                 ]
 
-                button [ Class "clear"; OnClick (fun _ -> dispatch ClearCompleted) ] [ str "Clear completed" ]
+                if (completedTodosCount > 0) then
+                    button [ Class "clear";
+                             OnClick (fun _ -> dispatch ClearCompleted) ]
+                           [ str (sprintf "Clear completed (%i)" completedTodosCount) ]
             ]
         ]
     ])
