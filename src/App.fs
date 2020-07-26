@@ -1,10 +1,10 @@
 module App
 
 open Browser.Dom
-open Browser.Types
 open Fable.React
 open Fable.React.Props
 open Todo
+open ReactUtils
 
 let data = [
     { Id = System.Guid.NewGuid (); Text = "active 1"; Completed = false }
@@ -70,15 +70,17 @@ let TodoItem =
         // input [ Class "edit"; Value "todo" ]
     ])
 
+// Components
+
 let App =
     FunctionComponent.Of(fun () ->
 
     let newTodoText = Hooks.useState ""
-    let state = Hooks.useReducer(reducer, initialState)
+    let (state, dispatch) = useReducer reducer initialState
 
     let filteredItems = 
-        state.current.Todos
-        |> filterTodos state.current.Filter
+        state.Todos
+        |> filterTodos state.Filter
         |> List.map TodoItem
 
     fragment [] [
@@ -106,26 +108,26 @@ let App =
 
                 ul [ Class "filters" ] [
                     li [] [
-                        a [ classList [ "selected", state.current.Filter = All ]
+                        a [ classList [ "selected", state.Filter = All ]
                             Href "#/"
-                            OnClick (fun _ -> state.update (Filter All)) ]
+                            OnClick (fun _ -> dispatch (Filter All)) ]
                           [ str "All" ]
                     ]
                     li [] [
-                        a [ classList [ "selected", state.current.Filter = Active ]
+                        a [ classList [ "selected", state.Filter = Active ]
                             Href "#/active"
-                            OnClick (fun _ -> state.update (Filter Active)) ]
+                            OnClick (fun _ -> dispatch (Filter Active)) ]
                           [ str "Active" ]
                     ]
                     li [] [
-                        a [ classList [ "selected", state.current.Filter = Completed ]
+                        a [ classList [ "selected", state.Filter = Completed ]
                             Href "#/completed"
-                            OnClick (fun _ -> state.update (Filter Completed)) ]
+                            OnClick (fun _ -> dispatch (Filter Completed)) ]
                           [ str "Completed" ]
                     ]
                 ]
 
-                button [ Class "clear"; OnClick (fun _ -> state.update ClearCompleted) ] [ str "Clear completed" ]
+                button [ Class "clear"; OnClick (fun _ -> dispatch ClearCompleted) ] [ str "Clear completed" ]
             ]
         ]
     ])
