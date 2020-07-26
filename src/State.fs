@@ -8,17 +8,20 @@ type Filter =
     | Completed
 
 type State = {
-    Todos: Todo list
+    AllCompleted: bool
     Filter: Filter
+    Todos: Todo list
 }
 
 type Action =
     | ClearCompleted
     | Filter of Filter
+    | ToggleAllCompleted of bool
 
 let initialState = {
-    Todos = Data.data
+    AllCompleted = false
     Filter = All
+    Todos = Data.data
 }
 
 let filterTodos filter (todos: Todo list) =
@@ -43,3 +46,10 @@ let reducer state action =
         { state with Filter = Completed }
     | Filter All ->
         { state with Filter = All }
+    | ToggleAllCompleted completed ->
+        let todos =
+            state.Todos
+            |> List.map (fun t -> { t with Completed = completed })
+        { state with
+            AllCompleted = completed
+            Todos = todos }

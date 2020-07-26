@@ -39,7 +39,7 @@ let App =
         ]
 
         section [ Class "main" ] [
-            input [ Id "toggle-all"; Type "checkbox" ]
+            input [ Id "toggle-all"; Type "checkbox"; OnClick (fun e -> dispatch (ToggleAllCompleted (not state.AllCompleted))) ]
 
             label [ HtmlFor "toggle-all" ] [ str "Mark all as complete" ]
 
