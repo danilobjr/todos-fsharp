@@ -17,6 +17,7 @@ type Action =
     | ClearCompleted
     | Filter of Filter
     | Remove of Guid
+    | ToggleCompleted of Guid
     | SetAllAsCompleted of bool
 
 let initialState = {
@@ -50,6 +51,15 @@ let reducer state action =
         let todos =
             state.Todos
             |> List.where (fun t -> t.Id <> id)
+        { state with Todos = todos }
+    | ToggleCompleted id ->
+        let todos =
+            state.Todos
+            |> List.map (fun t ->
+                if (t.Id = id) then
+                    { t with Completed = not t.Completed }
+                else
+                    t)
         { state with Todos = todos }
     | SetAllAsCompleted completed ->
         let todos =

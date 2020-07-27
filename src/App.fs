@@ -21,7 +21,8 @@ let App =
         |> List.map (fun t ->
             TodoItem 
                 {| Todo = t
-                   OnRemoveClick = (fun id -> dispatch (Remove id)) |})
+                   OnRemoveClick = (fun _ -> dispatch (Remove t.Id))
+                   OnCheckClick = (fun _ -> dispatch (ToggleCompleted t.Id)) |})
 
     let activeTodosCount =
         state.Todos
