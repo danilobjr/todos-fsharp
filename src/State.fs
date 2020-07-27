@@ -11,8 +11,7 @@ type Filter =
 type State = {
     AllCompleted: bool
     Filter: Filter
-    Todos: Todo list
-}
+    Todos: Todo list }
 
 type Action =
     | ClearCompleted
@@ -23,8 +22,7 @@ type Action =
 let initialState = {
     AllCompleted = false
     Filter = All
-    Todos = Data.data
-}
+    Todos = Data.data }
 
 let filterTodos filter (todos: Todo list) =
     match filter with
