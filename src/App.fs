@@ -63,27 +63,27 @@ let App =
 
                 ul [ Class "filters" ] [
                     li [] [
-                        FilterButton {
-                            CurrentFilter = state.Filter
-                            FilterBy = All
-                            Href = "#/"
-                            OnClick = (fun filter -> dispatch (Filter filter)) }
+                        FilterButton
+                            {| CurrentFilter = state.Filter
+                               FilterBy = All
+                               Href = "#/"
+                               OnClick = (fun filter -> dispatch (Filter filter)) |}
                     ]
 
                     li [] [
-                        FilterButton {
-                            CurrentFilter = state.Filter
-                            FilterBy = Active
-                            Href = "#/active"
-                            OnClick = (fun filter -> dispatch (Filter filter)) }
+                        FilterButton
+                            {| CurrentFilter = state.Filter
+                               FilterBy = Active
+                               Href = "#/active"
+                               OnClick = (fun filter -> dispatch (Filter filter)) |}
                     ]
 
                     li [] [
-                        FilterButton {
-                            CurrentFilter = state.Filter
-                            FilterBy = Completed
-                            Href = "#/completed"
-                            OnClick = (fun filter -> dispatch (Filter filter)) }
+                        FilterButton
+                            {| CurrentFilter = state.Filter
+                               FilterBy = Completed
+                               Href = "#/completed"
+                               OnClick = (fun filter -> dispatch (Filter filter)) |}
                     ]
                 ]
 
