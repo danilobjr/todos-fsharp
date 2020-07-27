@@ -50,7 +50,7 @@ let reducer state action =
     | Remove id ->
         let todos =
             state.Todos
-            |> List.where (fun t -> t.Id <> id)
+            |> List.filter (fun t -> t.Id <> id)
         { state with Todos = todos }
     | ToggleCompleted id ->
         let todos =
