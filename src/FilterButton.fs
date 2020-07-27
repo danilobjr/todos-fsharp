@@ -22,5 +22,6 @@ let FilterButton =
 
     a [ classList [ "selected", props.FilterBy = props.CurrentFilter ]
         Href props.Href
-        OnClick (fun _ -> props.OnClick props.FilterBy) ]
-      [ str filterText ])
+        OnClick (fun _ -> props.OnClick props.FilterBy) ] [
+        str filterText
+    ])

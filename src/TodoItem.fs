@@ -43,20 +43,25 @@ let TodoItem =
 
         if (not props.Editing) then
             div [ Class "view" ] [
-                input [ Class "toggle"
-                        Type "checkbox"
-                        Checked props.Todo.Completed
-                        OnChange props.OnCheckClick ]
+                input [
+                    Class "toggle"
+                    Type "checkbox"
+                    Checked props.Todo.Completed
+                    OnChange props.OnCheckClick ]
+
                 label [ OnDoubleClick handleDoubleClick ] [ str props.Todo.Text ]
-                button [ Class "destroy"; OnClick props.OnRemoveClick ] [] ]
+
+                button [ Class "destroy"; OnClick props.OnRemoveClick ] []
+            ]
 
         if (props.Editing) then
             form [ OnSubmit handleSubmit ] [
-                input [ Class "edit"
-                        AutoFocus true
-                        Value text.current
-                        OnBlur handleBlur
-                        OnChange (fun e -> text.update e.Value)
-                        OnKeyDown handleKeyPress ]
+                input [
+                    Class "edit"
+                    AutoFocus true
+                    Value text.current
+                    OnBlur handleBlur
+                    OnChange (fun e -> text.update e.Value)
+                    OnKeyDown handleKeyPress ]
             ]
     ])

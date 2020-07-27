@@ -49,7 +49,10 @@ let App =
         ]
 
         section [ Class "main" ] [
-            input [ Id "toggle-all"; Type "checkbox"; OnClick (fun e -> dispatch (SetAllAsCompleted (not state.AllCompleted))) ]
+            input [
+                Id "toggle-all"
+                Type "checkbox"
+                OnClick (fun e -> dispatch (SetAllAsCompleted (not state.AllCompleted))) ]
 
             label [ HtmlFor "toggle-all" ] [ str "Mark all as complete" ]
 
@@ -64,8 +67,7 @@ let App =
                             CurrentFilter = state.Filter
                             FilterBy = All
                             Href = "#/"
-                            OnClick = (fun filter -> dispatch (Filter filter))
-                        }
+                            OnClick = (fun filter -> dispatch (Filter filter)) }
                     ]
 
                     li [] [
@@ -73,8 +75,7 @@ let App =
                             CurrentFilter = state.Filter
                             FilterBy = Active
                             Href = "#/active"
-                            OnClick = (fun filter -> dispatch (Filter filter))
-                        }
+                            OnClick = (fun filter -> dispatch (Filter filter)) }
                     ]
 
                     li [] [
@@ -82,15 +83,16 @@ let App =
                             CurrentFilter = state.Filter
                             FilterBy = Completed
                             Href = "#/completed"
-                            OnClick = (fun filter -> dispatch (Filter filter))
-                        }
+                            OnClick = (fun filter -> dispatch (Filter filter)) }
                     ]
                 ]
 
                 if (completedTodosCount > 0) then
-                    button [ Class "clear";
-                             OnClick (fun _ -> dispatch ClearCompleted) ]
-                           [ str (sprintf "Clear completed (%i)" completedTodosCount) ]
+                    button [
+                        Class "clear";
+                        OnClick (fun _ -> dispatch ClearCompleted) ] [
+                        str (sprintf "Clear completed (%i)" completedTodosCount)
+                    ]
             ]
         ]
     ])

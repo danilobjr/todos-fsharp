@@ -15,9 +15,10 @@ let AddTodoForm =
         text.update ""
 
     form [ OnSubmit handleSubmit ] [
-        input [ Class "new"
-                Placeholder "What needs to be done?"
-                AutoFocus true
-                Value text.current
-                OnChange (fun e -> text.update e.Value) ]
+        input [
+            Class "new"
+            Placeholder "What needs to be done?"
+            AutoFocus true
+            Value text.current
+            OnChange (fun e -> text.update e.Value) ]
     ])
