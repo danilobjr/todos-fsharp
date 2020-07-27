@@ -10,19 +10,24 @@ type Filter =
 
 type State = {
     AllCompleted: bool
+    Editing: Guid option
     Filter: Filter
     Todos: Todo list }
 
 type Action =
     | Add of string
+    | CancelEdition
     | ClearCompleted
+    | Edit of Guid
     | Filter of Filter
     | Remove of Guid
-    | ToggleCompleted of Guid
+    | Save of Guid * string
     | SetAllAsCompleted of bool
+    | ToggleCompleted of Guid
 
 let initialState = {
     AllCompleted = false
+    Editing = None
     Filter = All
     Todos = Data.data }
 
@@ -42,11 +47,15 @@ let reducer state action =
         // Put this logic inside domain model
         let newTodo = create text
         { state with Todos = newTodo::state.Todos }
+    | CancelEdition ->
+        { state with Editing = None}
     | ClearCompleted ->
         let activeTodos =
             state.Todos
             |> filterTodos Active
         { state with Todos = activeTodos }
+    | Edit id ->
+        { state with Editing = Some id }
     | Filter Active ->
         { state with Filter = Active }
     | Filter Completed ->
@@ -58,14 +67,13 @@ let reducer state action =
             state.Todos
             |> List.filter (fun t -> t.Id <> id)
         { state with Todos = todos }
-    | ToggleCompleted id ->
+    | Save (id, updatedText) ->
         let todos =
             state.Todos
             |> List.map (fun t ->
-                if (t.Id = id) then
-                    { t with Completed = not t.Completed }
-                else
-                    t)
+                match t.Id = id with
+                | true -> { t with Text = updatedText }
+                | false -> t)
         { state with Todos = todos }
     | SetAllAsCompleted completed ->
         let todos =
@@ -74,3 +82,11 @@ let reducer state action =
         { state with
             AllCompleted = completed
             Todos = todos }
+    | ToggleCompleted id ->
+        let todos =
+            state.Todos
+            |> List.map (fun t ->
+                match t.Id = id with
+                    | true -> { t with Completed = not t.Completed }
+                    | false -> t)
+        { state with Todos = todos }

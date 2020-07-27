@@ -19,10 +19,19 @@ let App =
         state.Todos
         |> filterTodos state.Filter
         |> List.map (fun t ->
-            TodoItem 
-                {| Todo = t
+            let editing =
+                match state.Editing with
+                | Some id -> t.Id = id
+                | None -> false
+
+            TodoItem
+                {| Editing = editing
+                   Todo = t
+                   OnCancelEdition = (fun _ -> dispatch CancelEdition)
+                   OnCheckClick = (fun _ -> dispatch (ToggleCompleted t.Id))
+                   OnLabelDoubleClick = (fun _ -> dispatch (Edit t.Id))
                    OnRemoveClick = (fun _ -> dispatch (Remove t.Id))
-                   OnCheckClick = (fun _ -> dispatch (ToggleCompleted t.Id)) |})
+                   OnSave = (fun updatedText -> dispatch (Save (t.Id, updatedText))) |})
 
     let activeTodosCount =
         state.Todos
