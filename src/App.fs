@@ -15,10 +15,13 @@ let App =
     let newTodoText = Hooks.useState ""
     let (state, dispatch) = useReducer reducer initialState
 
-    let filteredItems = 
+    let todoItems = 
         state.Todos
         |> filterTodos state.Filter
-        |> List.map TodoItem
+        |> List.map (fun t ->
+            TodoItem 
+                {| Todo = t
+                   OnRemoveClick = (fun id -> dispatch (Remove id)) |})
 
     let activeTodosCount =
         state.Todos
@@ -42,11 +45,11 @@ let App =
         ]
 
         section [ Class "main" ] [
-            input [ Id "toggle-all"; Type "checkbox"; OnClick (fun e -> dispatch (ToggleAllCompleted (not state.AllCompleted))) ]
+            input [ Id "toggle-all"; Type "checkbox"; OnClick (fun e -> dispatch (SetAllAsCompleted (not state.AllCompleted))) ]
 
             label [ HtmlFor "toggle-all" ] [ str "Mark all as complete" ]
 
-            ul [ Class "todos" ] filteredItems
+            ul [ Class "todos" ] todoItems
 
             footer [] [
                 ActiveTodosCount { Count = activeTodosCount }
@@ -60,6 +63,7 @@ let App =
                             OnClick = (fun filter -> dispatch (Filter filter))
                         }
                     ]
+
                     li [] [
                         FilterButton {
                             CurrentFilter = state.Filter
@@ -68,6 +72,7 @@ let App =
                             OnClick = (fun filter -> dispatch (Filter filter))
                         }
                     ]
+
                     li [] [
                         FilterButton {
                             CurrentFilter = state.Filter

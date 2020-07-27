@@ -1,5 +1,6 @@
 module State
 
+open System
 open Todo
 
 type Filter =
@@ -16,7 +17,8 @@ type State = {
 type Action =
     | ClearCompleted
     | Filter of Filter
-    | ToggleAllCompleted of bool
+    | Remove of Guid
+    | SetAllAsCompleted of bool
 
 let initialState = {
     AllCompleted = false
@@ -46,7 +48,12 @@ let reducer state action =
         { state with Filter = Completed }
     | Filter All ->
         { state with Filter = All }
-    | ToggleAllCompleted completed ->
+    | Remove id ->
+        let todos =
+            state.Todos
+            |> List.where (fun t -> t.Id <> id)
+        { state with Todos = todos }
+    | SetAllAsCompleted completed ->
         let todos =
             state.Todos
             |> List.map (fun t -> { t with Completed = completed })
