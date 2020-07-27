@@ -14,6 +14,7 @@ type State = {
     Todos: Todo list }
 
 type Action =
+    | Add of string
     | ClearCompleted
     | Filter of Filter
     | Remove of Guid
@@ -36,6 +37,11 @@ let filterTodos filter (todos: Todo list) =
 
 let reducer state action =
     match action with
+    | Add text ->
+        // FIXME should only create a new todo if text is not empty
+        // Put this logic inside domain model
+        let newTodo = create text
+        { state with Todos = newTodo::state.Todos }
     | ClearCompleted ->
         let activeTodos =
             state.Todos

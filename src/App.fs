@@ -4,6 +4,7 @@ open Browser.Dom
 open Fable.React
 open Fable.React.Props
 open ActiveTodosCount
+open AddTodoForm
 open FilterButton
 open ReactUtils
 open State
@@ -12,7 +13,6 @@ open TodoItem
 let App =
     FunctionComponent.Of(fun () ->
 
-    let newTodoText = Hooks.useState ""
     let (state, dispatch) = useReducer reducer initialState
 
     let todoItems = 
@@ -36,13 +36,7 @@ let App =
         header [] [
             h1 [] [ str "todos" ]
 
-            form [ OnSubmit (fun e -> e.preventDefault ()) ] [
-                input [ Class "new"
-                        Placeholder "What needs to be done?"
-                        AutoFocus true
-                        Value newTodoText.current
-                        OnChange (fun e -> newTodoText.update e.Value) ]
-            ]
+            AddTodoForm {| OnPressEnter = (fun text -> dispatch (Add text)) |}
         ]
 
         section [ Class "main" ] [
