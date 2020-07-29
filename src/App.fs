@@ -41,6 +41,9 @@ let App =
     let completedTodosCount =
         (state.Todos |> List.length) - activeTodosCount
 
+    let listIsEmpty =
+        state.Todos |> List.isEmpty
+
     fragment [] [
         header [] [
             h1 [] [ str "todos" ]
@@ -49,19 +52,22 @@ let App =
         ]
 
         section [ Class "main" ] [
-            // FIXME should be hidden when no items left
             // FIXME should be checked when all items left are completed
             input [
                 Id "toggle-all"
                 Type "checkbox"
                 OnClick (fun e -> dispatch (SetAllAsCompleted (not state.AllCompleted))) ]
 
-            label [ HtmlFor "toggle-all" ] [ str "Mark all as complete" ]
+            label [ 
+                // classList [ "hidden", listIsEmpty ]
+                Hidden listIsEmpty
+                HtmlFor "toggle-all" ]
+                [ str "Mark all as complete" ]
 
             ul [ Class "todos" ] todoItems
 
-            footer [] [
-                ActiveTodosCount { Count = activeTodosCount }
+            footer [ Hidden listIsEmpty ] [
+                ActiveTodosCount {| Count = activeTodosCount |}
 
                 ul [ Class "filters" ] [
                     li [] [
