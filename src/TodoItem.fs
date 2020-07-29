@@ -39,11 +39,11 @@ let TodoItem =
 
     let handleSubmit (e: Event) =
         e.preventDefault ()
-        // let maybeText = TodoText.create text.current
-        // match maybeText with
-        // | Some text' ->
-        props.OnSave text.current
-        props.OnCancelEdition ()
+        match text.current with
+        | Some _ ->
+            props.OnSave text.current
+            props.OnCancelEdition ()
+        | None -> ()
 
     li [ classList [ "completed", props.Todo.Completed
                      "editing", props.Editing ]] [
