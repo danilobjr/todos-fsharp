@@ -44,6 +44,11 @@ let App =
     let listIsEmpty =
         state.Todos |> List.isEmpty
 
+    let allCompleted =
+        state.Todos
+        |> List.exists (fun t -> not t.Completed)
+        |> not
+
     fragment [] [
         header [] [
             h1 [] [ str "todos" ]
@@ -52,14 +57,13 @@ let App =
         ]
 
         section [ Class "main" ] [
-            // FIXME should be checked when all items left are completed
             input [
                 Id "toggle-all"
                 Type "checkbox"
-                OnClick (fun e -> dispatch (SetAllAsCompleted (not state.AllCompleted))) ]
+                Checked allCompleted
+                OnChange (fun e -> dispatch (SetAllAsCompleted (not state.AllCompleted))) ]
 
             label [ 
-                // classList [ "hidden", listIsEmpty ]
                 Hidden listIsEmpty
                 HtmlFor "toggle-all" ]
                 [ str "Mark all as complete" ]
