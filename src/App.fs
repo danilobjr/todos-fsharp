@@ -16,45 +16,30 @@ let App =
     let (state, dispatch) = useReducer reducer initialState
 
     let todoItems = 
-        let filteredTodos = 
-            state.Todos
-            |> filterTodos state.Filter
+        state.Todos
+        |> filterTodos state.Filter
+        |> List.map (fun t ->
+            let editing =
+                match state.Editing with
+                | Some id -> t.Id = id
+                | None -> false
 
-        match filteredTodos with
-        | Some todos ->
-            todos
-            |> List.map (fun t ->
-                let editing =
-                    match state.Editing with
-                    | Some id -> t.Id = id
-                    | None -> false
-
-                TodoItem
-                    {| Editing = editing
-                       Todo = t
-                       OnCancelEdition = (fun _ -> dispatch CancelEdition)
-                       OnCheckClick = (fun _ -> dispatch (ToggleCompleted t.Id))
-                       OnLabelDoubleClick = (fun _ -> dispatch (Edit t.Id))
-                       OnRemoveClick = (fun _ -> dispatch (Remove t.Id))
-                       OnSave = (fun updatedText -> dispatch (Save (t.Id, updatedText))) |})
-        | None -> []
+            TodoItem
+                {| Editing = editing
+                   Todo = t
+                   OnCancelEdition = (fun _ -> dispatch CancelEdition)
+                   OnCheckClick = (fun _ -> dispatch (ToggleCompleted t.Id))
+                   OnLabelDoubleClick = (fun _ -> dispatch (Edit t.Id))
+                   OnRemoveClick = (fun _ -> dispatch (Remove t.Id))
+                   OnSave = (fun updatedText -> dispatch (Save (t.Id, updatedText))) |})
 
     let activeTodosCount =
-        let filteredTodos =
-            state.Todos
-            |> filterTodos Active
-
-        match filteredTodos with
-        | Some todos ->
-            todos
-            |> List.length
-        | None -> 0
+        state.Todos
+        |> filterTodos Active
+        |> List.length
 
     let completedTodosCount =
-        match state.Todos with
-        | Some todos -> 
-            (todos |> List.length) - activeTodosCount
-        | None -> 0
+        (state.Todos |> List.length) - activeTodosCount
 
     fragment [] [
         header [] [

@@ -13,7 +13,7 @@ type State =
     { AllCompleted: bool
       Editing: Guid option
       Filter: Filter
-      Todos: (Todo list) option }
+      Todos: Todo list }
 
 type Action =
     | Add of Text option
@@ -32,34 +32,22 @@ let initialState =
       Filter = All
       Todos = DataSource.todos }
 
-let filterTodos filter (todos: (Todo list) option) =
-    match todos with
-    | Some todos' -> 
-        match filter with
-        | Active ->
-            todos'
-            |> List.filter (fun t -> not t.Completed)
-            |> Some
-        | Completed ->
-            todos'
-            |> List.filter (fun t -> t.Completed)
-            |> Some
-        | All ->
-            todos
-    | None -> todos
+let filterTodos filter todos =
+    match filter with
+    | Active ->
+        todos
+        |> List.filter (fun t -> not t.Completed)
+    | Completed ->
+        todos
+        |> List.filter (fun t -> t.Completed)
+    | All ->
+        todos
 
 let reducer state action =
     match action with
     | Add text ->
         match createTodo text with
-        | Some newTodo ->
-            let todos =
-                match state.Todos with
-                | Some todos ->
-                    Some (newTodo::todos)
-                | None -> 
-                    state.Todos
-            { state with Todos = todos }
+        | Some newTodo -> { state with Todos = newTodo::state.Todos }
         | None -> state
 
     | CancelEdition ->
@@ -82,51 +70,35 @@ let reducer state action =
 
     | Remove id ->
         let todos =
-            match state.Todos with
-            | Some todos ->
-                todos
-                |> List.filter (fun t -> t.Id <> id)
-                |> Some
-            | None -> state.Todos
+            state.Todos
+            |> List.filter (fun t -> t.Id <> id)
         { state with Todos = todos }
 
     | Save (id, updatedText) ->
         match updatedText with
         | Some updatedText' ->
             let todos =
-                match state.Todos with
-                | Some todos ->
-                    todos
-                    |> List.map (fun t ->
-                        match t.Id = id with
-                        | true -> { t with Text = updatedText' }
-                        | false -> t)
-                    |> Some
-                | None -> state.Todos
+                state.Todos 
+                |> List.map (fun t ->
+                    match t.Id = id with
+                    | true -> { t with Text = updatedText' }
+                    | false -> t)
             { state with Todos = todos }
         | None -> state
 
     | SetAllAsCompleted completed ->
         let todos =
-            match state.Todos with
-            | Some todos ->
-                todos
-                |> List.map (fun t -> { t with Completed = completed })
-                |> Some
-            | None -> state.Todos
+            state.Todos
+            |> List.map (fun t -> { t with Completed = completed })
         { state with
             AllCompleted = completed
             Todos = todos }
             
     | ToggleCompleted id ->
         let todos =
-            match state.Todos with
-            | Some todos ->
-                todos
-                |> List.map (fun t ->
-                    match t.Id = id with
-                        | true -> { t with Completed = not t.Completed }
-                        | false -> t)
-                |> Some
-            | None -> state.Todos
+            state.Todos
+            |> List.map (fun t ->
+                match t.Id = id with
+                    | true -> { t with Completed = not t.Completed }
+                    | false -> t)
         { state with Todos = todos }

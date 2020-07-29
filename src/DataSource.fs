@@ -8,11 +8,11 @@ let createText text =
     |> Option.get
 
 let todos =
-    Some [ { Id = System.Guid.NewGuid (); Text = createText "active 1"; Completed = false }
-           { Id = System.Guid.NewGuid (); Text = createText "active 2"; Completed = false }
-           { Id = System.Guid.NewGuid (); Text = createText "active 3"; Completed = false }
-           { Id = System.Guid.NewGuid (); Text = createText "active 4"; Completed = false }
-           { Id = System.Guid.NewGuid (); Text = createText "completed 5"; Completed = true }
-           { Id = System.Guid.NewGuid (); Text = createText "completed 6"; Completed = true }
-           { Id = System.Guid.NewGuid (); Text = createText "completed 7"; Completed = true } ]
+    [ { Id = System.Guid.NewGuid (); Text = createText "active 1"; Completed = false }
+      { Id = System.Guid.NewGuid (); Text = createText "active 2"; Completed = false }
+      { Id = System.Guid.NewGuid (); Text = createText "active 3"; Completed = false }
+      { Id = System.Guid.NewGuid (); Text = createText "active 4"; Completed = false }
+      { Id = System.Guid.NewGuid (); Text = createText "completed 5"; Completed = true }
+      { Id = System.Guid.NewGuid (); Text = createText "completed 6"; Completed = true }
+      { Id = System.Guid.NewGuid (); Text = createText "completed 7"; Completed = true } ]
 
