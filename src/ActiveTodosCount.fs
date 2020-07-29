@@ -8,10 +8,8 @@ let getItemsLeftPhrase = function
     | Some count -> sprintf "%i items left" count
     | None -> "No items left"
 
-type ActiveTodosCountProps = { Count: int }
-
 let ActiveTodosCount =
-    FunctionComponent.Of<ActiveTodosCountProps>(fun props ->
+    FunctionComponent.Of<{| Count: int |}>(fun props ->
 
     let toOption count =
         match count with
