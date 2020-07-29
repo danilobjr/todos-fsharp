@@ -30,8 +30,7 @@ let initialState =
     { AllCompleted = false
       Editing = None
       Filter = All
-      // TODO rename Data module/file to DataSource and data bind to todos (DataSource.todos)
-      Todos = Data.data }
+      Todos = DataSource.todos }
 
 let filterTodos filter (todos: (Todo list) option) =
     match todos with

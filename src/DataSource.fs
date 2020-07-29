@@ -1,4 +1,4 @@
-module Data
+module DataSource
 
 open Todo
 
@@ -7,7 +7,7 @@ let createText text =
     |> TodoText.create
     |> Option.get
 
-let data =
+let todos =
     Some [ { Id = System.Guid.NewGuid (); Text = createText "active 1"; Completed = false }
            { Id = System.Guid.NewGuid (); Text = createText "active 2"; Completed = false }
            { Id = System.Guid.NewGuid (); Text = createText "active 3"; Completed = false }
