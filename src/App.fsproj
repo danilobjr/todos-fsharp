@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="TodoText.fs" />
     <Compile Include="Todo.fs" />
     <Compile Include="ReactUtils.fs" />
     <Compile Include="Data.fs" />

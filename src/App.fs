@@ -16,39 +16,56 @@ let App =
     let (state, dispatch) = useReducer reducer initialState
 
     let todoItems = 
-        state.Todos
-        |> filterTodos state.Filter
-        |> List.map (fun t ->
-            let editing =
-                match state.Editing with
-                | Some id -> t.Id = id
-                | None -> false
+        let filteredTodos = 
+            state.Todos
+            |> filterTodos state.Filter
 
-            TodoItem
-                {| Editing = editing
-                   Todo = t
-                   OnCancelEdition = (fun _ -> dispatch CancelEdition)
-                   OnCheckClick = (fun _ -> dispatch (ToggleCompleted t.Id))
-                   OnLabelDoubleClick = (fun _ -> dispatch (Edit t.Id))
-                   OnRemoveClick = (fun _ -> dispatch (Remove t.Id))
-                   OnSave = (fun updatedText -> dispatch (Save (t.Id, updatedText))) |})
+        match filteredTodos with
+        | Some todos ->
+            todos
+            |> List.map (fun t ->
+                let editing =
+                    match state.Editing with
+                    | Some id -> t.Id = id
+                    | None -> false
+
+                TodoItem
+                    {| Editing = editing
+                       Todo = t
+                       OnCancelEdition = (fun _ -> dispatch CancelEdition)
+                       OnCheckClick = (fun _ -> dispatch (ToggleCompleted t.Id))
+                       OnLabelDoubleClick = (fun _ -> dispatch (Edit t.Id))
+                       OnRemoveClick = (fun _ -> dispatch (Remove t.Id))
+                       OnSave = (fun updatedText -> dispatch (Save (t.Id, updatedText))) |})
+        | None -> []
 
     let activeTodosCount =
-        state.Todos
-        |> filterTodos Active
-        |> List.length
+        let filteredTodos =
+            state.Todos
+            |> filterTodos Active
+
+        match filteredTodos with
+        | Some todos ->
+            todos
+            |> List.length
+        | None -> 0
 
     let completedTodosCount =
-        (state.Todos |> List.length) - activeTodosCount
+        match state.Todos with
+        | Some todos -> 
+            (todos |> List.length) - activeTodosCount
+        | None -> 0
 
     fragment [] [
         header [] [
             h1 [] [ str "todos" ]
 
-            AddTodoForm {| OnPressEnter = (fun text -> dispatch (Add text)) |}
+            AddTodoForm {| OnPressEnter = (fun text -> dispatch (Add (TodoText.create text))) |}
         ]
 
         section [ Class "main" ] [
+            // FIXME should be hidden when no items left
+            // FIXME should be checked when all items left are completed
             input [
                 Id "toggle-all"
                 Type "checkbox"

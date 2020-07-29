@@ -7,7 +7,7 @@ open Fable.React.Props
 let AddTodoForm =
     FunctionComponent.Of<{| OnPressEnter: string -> unit |}>(fun props -> 
 
-    let text = Hooks.useState("");
+    let text = Hooks.useState("")
 
     let handleSubmit (e: Event) =
         e.preventDefault ()

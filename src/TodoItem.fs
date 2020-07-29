@@ -4,10 +4,9 @@ open Browser.Types
 open Fable.React
 open Fable.React.Props
 open Todo
-open Browser.Dom
 
-[<Literal>]
-let ESCAPE_KEY = 27.0 
+
+let [<Literal>] ESCAPE_KEY = 27. 
 
 let TodoItem = 
     FunctionComponent.Of<{| Editing: bool
@@ -16,12 +15,17 @@ let TodoItem =
                             OnCheckClick: Event -> unit
                             OnLabelDoubleClick: MouseEvent -> unit
                             OnRemoveClick: MouseEvent -> unit
-                            OnSave: string -> unit |}>(fun props ->
+                            OnSave: TodoText.Text option -> unit |}>(fun props ->
 
-    let text = Hooks.useState(props.Todo.Text)
+    let text = Hooks.useState (Some props.Todo.Text)
+
+    let currentTextValue =
+        match text.current with
+        | Some t -> t |> TodoText.value
+        | None -> ""
 
     let handleBlur _ =
-        text.update props.Todo.Text
+        text.update text.current
         props.OnCancelEdition ()
 
     let handleKeyPress (e: KeyboardEvent) =
@@ -30,11 +34,14 @@ let TodoItem =
         | _ -> ()
 
     let handleDoubleClick e =
-        text.update props.Todo.Text
+        text.update (Some props.Todo.Text)
         props.OnLabelDoubleClick e
 
     let handleSubmit (e: Event) =
         e.preventDefault ()
+        // let maybeText = TodoText.create text.current
+        // match maybeText with
+        // | Some text' ->
         props.OnSave text.current
         props.OnCancelEdition ()
 
@@ -49,7 +56,7 @@ let TodoItem =
                     Checked props.Todo.Completed
                     OnChange props.OnCheckClick ]
 
-                label [ OnDoubleClick handleDoubleClick ] [ str props.Todo.Text ]
+                label [ OnDoubleClick handleDoubleClick ] [ str (props.Todo.Text |> TodoText.value) ]
 
                 button [ Class "destroy"; OnClick props.OnRemoveClick ] []
             ]
@@ -59,9 +66,9 @@ let TodoItem =
                 input [
                     Class "edit"
                     AutoFocus true
-                    Value text.current
+                    Value currentTextValue
                     OnBlur handleBlur
-                    OnChange (fun e -> text.update e.Value)
+                    OnChange (fun e -> text.update (e.Value |> TodoText.create))
                     OnKeyDown handleKeyPress ]
             ]
     ])
