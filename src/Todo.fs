@@ -8,9 +8,10 @@ type Todo =
       Text: Text
       Completed: bool }
 
-let create = function
+let create =
+    function
     | Some text ->
-        Some { Id = Guid.NewGuid ()
+        Some { Id = Guid.NewGuid()
                Text = text
                Completed = false }
     | None -> None
