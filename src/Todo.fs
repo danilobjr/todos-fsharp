@@ -8,8 +8,7 @@ type Todo =
       Text: Text
       Completed: bool }
 
-// TODO rename this to create and use Todo.create in other files
-let createTodo = function
+let create = function
     | Some text ->
         Some { Id = Guid.NewGuid ()
                Text = text

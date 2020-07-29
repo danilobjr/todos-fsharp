@@ -46,7 +46,7 @@ let filterTodos filter todos =
 let reducer state action =
     match action with
     | Add text ->
-        match createTodo text with
+        match Todo.create text with
         | Some newTodo -> { state with Todos = newTodo::state.Todos }
         | None -> state
 
